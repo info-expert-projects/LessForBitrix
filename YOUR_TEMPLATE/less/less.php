@@ -1,4 +1,8 @@
 <?php
+if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
+global $USER;
+if (!$USER->IsAdmin()) return;
+
 /**
  * ===============================================================
  * LessForBitrix - примочка для подключения класса phpless в шаблон bitrix 
@@ -7,10 +11,11 @@
  * - Автоматическая компиляция less при изменении файла, при этом отслеживаются изменения и в импортированных файлах.
  * - Сжатие выходного css-файла (с возможностью отключать сжатие).
  * - Вывод ошибок компиляции (особо не проверял какие ошибки выводятся, но если будет явный косяк - класс скажет в какой строке искать и не станет делать компиляцию, но может и не точно сказать т.к. защиты от кривых рук там нет).
+ * - Ведение наглядного лога
  * ===============================================================
  * Файл: less.php
  * ---------------------------------------------------------------
- * Версия: 1.1.0 (30.04.2013)
+ * Версия: 2.0.0 (19.06.2013)
  * ===============================================================
  * 
  * Использование: 
@@ -21,13 +26,33 @@
  * По умолчанию подключается файл template_styles.less текущего шаблона сайта.
  * туда же записывается одноимённый css-файл (который и используется в bitrix).
  * Все настройки чуть ниже.
+ * ===============================================================
  */
 
 
+/**
+ * Настройки компиляции
+ */
+
+// Ведение лог-файла
+$lessLog      = false;			// Вести лог-файл с отображением времени выполнения компиляции. true включит ведение лога.
+$lessFileSize = '15';			// максимальный размер файла лога, в килобайтах (если размер файла будет больше, он удалится).
+$lessLogFile  = 'less-log';		// Имя лог-файла. Файл является html-страницей и записывается в корень сайта.
+
 // Определяем входящий и выходящий файлы и определяем сжимать или нет выходящий файл.
-$inputFile = $_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH."/template_styles.less"; //Файл template_styles.less, лежащий в текущем шаблоне сайта
-$outputFile = str_ireplace('.less', '.css', $inputFile); //Файл template_styles.css - который подключается к шаблону
-$normal = false; // true для отключения сжатия.
+$inputFile    = $_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH."/template_styles.less"; // Файл template_styles.less, лежащий в текущем шаблоне сайта
+$outputFile   = str_ireplace('.less', '.css', $inputFile); // Файл template_styles.css - который подключается к шаблону
+$normal       = false;			// true для отключения сжатия выходящего файла.
+
+
+/**
+ * Конец настроек
+ */
+// Если включено логирование - "запускаем счётчик времени".
+if($lessLog) {
+	$timeStart = microtime(true);
+}
+
 
 // Выполняем функцию компиляции
 try {
@@ -37,9 +62,99 @@ try {
 	echo '<div style="text-align: center; background: #fff; color: red; padding: 5px;">Less error: '.$e->getMessage().'</div>';
 }
 
-/**
+// Если разрешено, то пишем лог-файл с временем выполнения компиляции less-файлов :)
+if($lessLog) {
+	$timeStop = microtime(true);
+	$lessLog = round(($timeStop - $timeStart), 6);
+	$textColor = ($lessLog > '0.001') ? 'red' : 'green';
+	$mem_usg = '';
+	$lessLogFile = $_SERVER['DOCUMENT_ROOT'].'/'.$lessLogFile.'.html';
+	if(function_exists("memory_get_peak_usage")) $mem_usg = round(memory_get_peak_usage()/(1024*1024),2)."Мб";
+	if ((file_exists($lessLogFile) && filesize($lessLogFile) > $lessFileSize*1024)) {
+		unlink($lessLogFile);
+	}
+	if (!file_exists($lessLogFile)) {
+			$cLessFile = fopen($lessLogFile, "wb");
+			$firstText = "
+				<!DOCTYPE html>
+				<html lang='ru'>
+				<head>
+					<title>Лог времени выполнения компиляции LESS</title>
+					<meta charset='".LANG_CHARSET."'>
+					<style>
+						a {display: inline-block;margin-bottom: 5px;}
+						.red {color: red;}
+						.green {color: green;}
+						table {margin: 50px auto; border-collapse: collapse;border: solid 1px #ccc; font: normal 14px Arial, Helvetica, sans-serif;}
+						th b {cursor: help; color: #c00;}
+						td {text-align: right;}
+						th, td {font-size: 12px; border: solid 1px #ccc; padding: 5px 8px;}
+						td:first-child {text-align: left;}
+						tr:hover {background: #f0f0f0; color: #1d1d1d;}
+					</style>
+					<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js'></script>
+					<script>
+						// Скрипт посчета среднего значения
+						$.fn.getZnach = function (prop) {
+							var options = $.extend({
+								source: 'с',
+								ins: '',
+								quant: '5'
+							}, prop);
+
+							var summ = 0;
+							this.each(function (i) {
+								summ += +($(this).text().replace(/,/, '.').replace(options.source, ''));
+							});
+							$(options.ins).append('<br /><b title=\"Cреднее значение\">' + (summ / this.length).toFixed(options.quant) + options.source + '</b>');
+						}
+						// Инициализация скрипта
+						jQuery(function ($) {
+							$('td.timer').getZnach({
+								ins: 'th.timer'
+							});
+							$('td.mem_usg').getZnach({
+								source: 'Мб',
+								ins: 'th.mem_usg',
+								quant: '2'
+							});
+						});
+					</script>
+				</head>
+				<body>
+					<table class='stattable'>
+						<tr>
+							<th scope='col' class='queries'>Дата записи</th>
+							<th scope='col' class='timer'>Вемя выполнения компилятора</th>
+							<th scope='col' class='mem_usg'>Затраты памяти</th>
+						</tr>
+					\r\n</table></body></html>";
+			fwrite($cLessFile, $firstText);
+			fclose($cLessFile);
+
+		} else {
+			$cLessFileArr = file($lessLogFile);
+			$lastLine = array_pop($cLessFileArr);
+			$newText = implode("", $cLessFileArr);
+
+			$newTextAdd = "добавляем строку, не спрашивайте, так надо!\r\n";
+			$newTextAdd = "	
+				<tr>
+					<td class='queries'>".date('Y-m-d H:i:s')."</td>
+					<td class='timer ".$textColor."'><b>".$lessLog."с</b></td>
+					<td class='mem_usg'>".$mem_usg."</td>
+				</tr>\r\n";
+
+			$cLessFile = fopen($lessLogFile, "w");	
+
+			fwrite($cLessFile, $newText.$newTextAdd.$lastLine);
+			fclose($cLessFile);
+		}
+	}
+
+	/**
 	 * Функция автокомпиляции less, запускается даже если изменён импортированный файл - очень удобно.
-	 * функция взята из документации к классу.
+	 * функция взята из документации к классу и на просторах интернета.
 	 * @param string $inpFile - входной файл (в котором могут быть и импортированные файлы)
 	 * @param string $outFile - выходной файл
 	 * @param string $nocompress - отключает сжатие выходного файла

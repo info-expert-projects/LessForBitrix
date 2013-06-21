@@ -15,7 +15,7 @@ if (!$USER->IsAdmin()) return;
  * ===============================================================
  * Файл: less.php
  * ---------------------------------------------------------------
- * Версия: 2.0.0 (19.06.2013)
+ * Версия: 2.0.1 (21.06.2013)
  * ===============================================================
  * 
  * Использование: 
@@ -35,14 +35,15 @@ if (!$USER->IsAdmin()) return;
  */
 
 // Ведение лог-файла
-$lessLog      = false;			// Вести лог-файл с отображением времени выполнения компиляции. true включит ведение лога.
+$lessLog      = true;			// Вести лог-файл с отображением времени выполнения компиляции. true включит ведение лога.
 $lessFileSize = '15';			// максимальный размер файла лога, в килобайтах (если размер файла будет больше, он удалится).
 $lessLogFile  = 'less-log';		// Имя лог-файла. Файл является html-страницей и записывается в корень сайта.
 
 // Определяем входящий и выходящий файлы и определяем сжимать или нет выходящий файл.
 $inputFile    = $_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH."/template_styles.less"; // Файл template_styles.less, лежащий в текущем шаблоне сайта
 $outputFile   = str_ireplace('.less', '.css', $inputFile); // Файл template_styles.css - который подключается к шаблону
-$normal       = false;			// true для отключения сжатия выходящего файла.
+$normal       = true;			// true для отключения сжатия выходящего файла.
+$alertError	  = true;			// false для показа ошибок компиляции вверху страницы (по умолчанию показываются js-алертом);
 
 
 /**
@@ -51,6 +52,7 @@ $normal       = false;			// true для отключения сжатия вых
 // Если включено логирование - "запускаем счётчик времени".
 if($lessLog) {
 	$timeStart = microtime(true);
+	$logError = '';
 }
 
 
@@ -58,8 +60,13 @@ if($lessLog) {
 try {
 	autoCompileLess($inputFile, $outputFile, $normal);
 } catch (exception $e) {
-	// Если что-то пошло не так - скажем об этом пользователю.
-	echo '<div style="text-align: center; background: #fff; color: red; padding: 5px;">Less error: '.$e->getMessage().'</div>';
+	// Если что-то пошло не так - скажем об этом пользователю способом, указанным в настройках и запишем в лог.
+	$logError = str_replace($_SERVER['DOCUMENT_ROOT'], '', $e->getMessage());
+	$showError = ($alertError) ? '<script>alert("Less error: '.$logError.'")</script>' : '<div style="text-align: center; background: #fff; color: red; padding: 5px;">Less error: '.$logError.'</div>';
+
+	echo $showError;
+
+
 }
 
 // Если разрешено, то пишем лог-файл с временем выполнения компиляции less-файлов :)
@@ -138,12 +145,22 @@ if($lessLog) {
 			$newText = implode("", $cLessFileArr);
 
 			$newTextAdd = "добавляем строку, не спрашивайте, так надо!\r\n";
-			$newTextAdd = "	
-				<tr>
-					<td class='queries'>".date('Y-m-d H:i:s')."</td>
-					<td class='timer ".$textColor."'><b>".$lessLog."с</b></td>
-					<td class='mem_usg'>".$mem_usg."</td>
-				</tr>\r\n";
+			if($logError) {
+				$newTextAdd = "
+					<tr>
+						<td class='queries'>".date('Y-m-d H:i:s')."</td>
+						<td colspan='2'><b class='red'>Ошибка: </b>".$logError."</td>
+					</tr>\r\n";
+			} else {
+				$newTextAdd = "	
+					<tr>
+						<td class='queries'>".date('Y-m-d H:i:s')."</td>
+						<td class='timer ".$textColor."'><b>".$lessLog."с</b></td>
+						<td class='mem_usg'>".$mem_usg."</td>
+					</tr>\r\n";
+				
+			}
+
 
 			$cLessFile = fopen($lessLogFile, "w");	
 

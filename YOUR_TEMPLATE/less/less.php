@@ -12,10 +12,11 @@ if (!$USER->IsAdmin()) return;
  * - Сжатие выходного css-файла (с возможностью отключать сжатие).
  * - Вывод ошибок компиляции (особо не проверял какие ошибки выводятся, но если будет явный косяк - класс скажет в какой строке искать и не станет делать компиляцию, но может и не точно сказать т.к. защиты от кривых рук там нет).
  * - Ведение наглядного лога
+ * - Автоматическое добавление блока с информацией о компиляции файла и копирайтами (текст копирайта берётся из настроек ниже).
  * ===============================================================
  * Файл: less.php
  * ---------------------------------------------------------------
- * Версия: 2.0.1 (21.06.2013)
+ * Версия: 2.1.0 (18.07.2013)
  * ===============================================================
  * 
  * Использование: 
@@ -40,10 +41,12 @@ $lessFileSize = '15';			// максимальный размер файла ло
 $lessLogFile  = 'less-log';		// Имя лог-файла. Файл является html-страницей и записывается в корень сайта.
 
 // Определяем входящий и выходящий файлы и определяем сжимать или нет выходящий файл.
-$inputFile    = $_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH."/template_styles.less"; // Файл template_styles.less, лежащий в текущем шаблоне сайта
+$inputFile    = $_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH."/special.less"; // Файл template_styles.less, лежащий в текущем шаблоне сайта
 $outputFile   = str_ireplace('.less', '.css', $inputFile); // Файл template_styles.css - который подключается к шаблону
 $normal       = true;			// true для отключения сжатия выходящего файла.
 $alertError	  = true;			// false для показа ошибок компиляции вверху страницы (по умолчанию показываются js-алертом);
+
+$copyText = '@author: Павел Белоусов (www.info-expert.ru)'; // Текст, который будет записан в начало файла CSS вместе со статистикой
 
 
 /**
@@ -58,11 +61,11 @@ if($lessLog) {
 
 // Выполняем функцию компиляции
 try {
-	autoCompileLess($inputFile, $outputFile, $normal);
+	autoCompileLess($inputFile, $outputFile, $normal, $copyText);
 } catch (exception $e) {
 	// Если что-то пошло не так - скажем об этом пользователю способом, указанным в настройках и запишем в лог.
 	$logError = str_replace($_SERVER['DOCUMENT_ROOT'], '', $e->getMessage());
-	$showError = ($alertError) ? '<script>alert("Less error: '.$logError.'")</script>' : '<div style="text-align: center; background: #fff; color: red; padding: 5px;">Less error: '.$logError.'</div>';
+	$showError = ($alertError) ? '<script>alert("Less error: '.str_replace('"', ' ', $logError).'")</script>' : '<div style="text-align: center; background: #fff; color: red; padding: 5px;">Less error: '.$logError.'</div>';
 
 	echo $showError;
 
@@ -177,8 +180,8 @@ if($lessLog) {
 	 * @param string $nocompress - отключает сжатие выходного файла
 	 * @return file
 	 */
-	function autoCompileLess($inpFile, $outFile, $nocompress = false) {
-
+	function autoCompileLess($inpFile, $outFile, $nocompress = false, $copy) {
+		
 		$cacheFile = $inpFile.".cache";
 
 		if (file_exists($cacheFile)) {
@@ -199,12 +202,29 @@ if($lessLog) {
 			// Иначе сжимаем всё в одну строку.
 			$less->setFormatter('compressed');
 		}
-		
+		// Массив с данными разультата компиляции
 		$newCache = $less->cachedCompile($cache);
+
+		// Выдёргиваем имена импортируемых файлов
+		$sourceFiles = array();
+		foreach ($cache["files"] as $key => $source) {
+			$sourceFiles[] = basename($key);
+		}
+
+		// Добавляем копирайты и информацию по файлам в начало.
+		$copy = '
+/* ==========================================================================
+   @outputFile: '.basename($outFile).'
+   @inputFiles: '.implode(', ',$sourceFiles).'
+   @date: '.date('Y-m-d H:i:s').'
+   '.$copy.' */
+/* ========================================================================== */
+
+';
 
 		if (!is_array($cache) || $newCache["updated"] > $cache["updated"]) {
 			file_put_contents($cacheFile, serialize($newCache));
-			file_put_contents($outFile, $newCache['compiled']);
+			file_put_contents($outFile, $copy.$newCache['compiled']);
 		}
 	}
 

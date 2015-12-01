@@ -1,5 +1,5 @@
-<?php 
-if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
+<?php
+if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
 	die();
 }
 
@@ -11,61 +11,78 @@ Loc::loadMessages(__FILE__);
 $files      = array();
 $context    = App::getInstance()->getContext();
 $rootFolder = $context->getServer()->getDocumentRoot();
-if (isset($arCurrentValues["PATH"])
-	&& is_dir($rootFolder . $arCurrentValues["PATH"])
-	&& $handle = opendir($rootFolder . $arCurrentValues["PATH"])
+if (isset($arCurrentValues['PATH'])
+	&& is_dir($rootFolder . $arCurrentValues['PATH'])
+	&& $handle = opendir($rootFolder . $arCurrentValues['PATH'])
 ) {
 
 	while (false !== ($file = readdir($handle))) {
-		if ($file != "." && $file != "..") {
+		if ($file != '.' && $file != '..') {
 			$files[$file] = $file;
 		}
 	}
 	closedir($handle);
 }
 
+$arGroups = array();
+$rsGroups = CGroup::GetList(($by = 'c_sort'), ($order = 'desc'));
+
+while ($arUserGroups = $rsGroups->Fetch()) {
+	$arGroups[$arUserGroups['ID']] = '[' . $arUserGroups['ID'] . '] ' . $arUserGroups['NAME'];
+}
+
 $arComponentParameters = array(
-	"GROUPS"     => array(),
-	"PARAMETERS" => array(
+	'GROUPS'     => array(),
+	'PARAMETERS' => array(
 
-		"PATH"      => array(
-			"PARENT"   => "BASE",
-			"NAME"     => Loc::getMessage('PAF_LESS_PATH'),
-			"TYPE"     => "STRING",
-			"MULTIPLE" => "N",
-			"DEFAULT"  => "",
-			"REFRESH"  => "Y",
+		'ACCESS_GROUPS' => array(
+			'PARENT'   => 'BASE',
+			'NAME'     => Loc::getMessage('PAF_LESS_ACCESS_GROUPS'),
+			'TYPE'     => 'LIST',
+			'MULTIPLE' => 'Y',
+			'DEFAULT'  => "1",
+			'REFRESH'  => "N",
+			'VALUES'   => $arGroups,
 		),
 
-		"FILES"     => array(
-			"PARENT"   => "BASE",
-			"NAME"     => Loc::getMessage('PAF_LESS_FILES'),
-			"TYPE"     => "LIST",
-			"MULTIPLE" => "Y",
-			"DEFAULT"  => "",
-			"VALUES"   => $files,
+		'PATH'          => array(
+			'PARENT'   => 'BASE',
+			'NAME'     => Loc::getMessage('PAF_LESS_PATH'),
+			'TYPE'     => 'STRING',
+			'MULTIPLE' => "N",
+			'DEFAULT'  => '',
+			'REFRESH'  => "Y",
 		),
 
-		"PATH_CSS"  => array(
-			"PARENT"   => "BASE",
-			"NAME"     => Loc::getMessage('PAF_LESS_PATH_CSS'),
-			"TYPE"     => "STRING",
-			"MULTIPLE" => "N",
-			"DEFAULT"  => "",
-			"REFRESH"  => "N",
+		'FILES'         => array(
+			'PARENT'   => 'BASE',
+			'NAME'     => Loc::getMessage('PAF_LESS_FILES'),
+			'TYPE'     => 'LIST',
+			'MULTIPLE' => "Y",
+			'DEFAULT'  => '',
+			'VALUES'   => $files,
 		),
 
-		"COMPRESS"  => array(
-			"PARENT"  => "BASE",
-			"NAME"    => Loc::getMessage('PAF_LESS_COMPRESS'),
-			"TYPE"    => "CHECKBOX",
-			"DEFAULT" => "Y",
+		'PATH_CSS'      => array(
+			'PARENT'   => 'BASE',
+			'NAME'     => Loc::getMessage('PAF_LESS_PATH_CSS'),
+			'TYPE'     => 'STRING',
+			'MULTIPLE' => 'N',
+			'DEFAULT'  => '',
+			'REFRESH'  => 'N',
 		),
-		"SOURSEMAP" => array(
-			"PARENT"  => "BASE",
-			"NAME"    => Loc::getMessage('PAF_LESS_SOURSEMAP'),
-			"TYPE"    => "CHECKBOX",
-			"DEFAULT" => "N",
+
+		'COMPRESS'      => array(
+			'PARENT'  => 'BASE',
+			'NAME'    => Loc::getMessage('PAF_LESS_COMPRESS'),
+			'TYPE'    => 'CHECKBOX',
+			'DEFAULT' => "Y",
+		),
+		'SOURSEMAP'     => array(
+			'PARENT'  => 'BASE',
+			'NAME'    => Loc::getMessage('PAF_LESS_SOURSEMAP'),
+			'TYPE'    => 'CHECKBOX',
+			'DEFAULT' => 'N',
 		),
 
 	),

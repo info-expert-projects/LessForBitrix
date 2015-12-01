@@ -4,3 +4,4 @@ $MESS['PAF_LESS_PATH_CSS'] = 'Путь от корня сайта к папке 
 $MESS['PAF_LESS_FILES'] = 'Список файлов для компиляции';
 $MESS['PAF_LESS_COMPRESS'] = 'Минифицировать CSS файл';
 $MESS['PAF_LESS_SOURSEMAP'] = 'Генерировать SourseMap';
+$MESS['PAF_LESS_ACCESS_GROUPS'] = 'Кому разрешена компиляция';

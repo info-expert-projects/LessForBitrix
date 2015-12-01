@@ -49,8 +49,10 @@ class pafnuty_less extends CModule {
 
 		if ($this->errors !== false) {
 			$APPLICATION->ThrowException(implode("<br>", $this->errors));
+
 			return false;
 		}
+
 		return true;
 	}
 
@@ -64,11 +66,13 @@ class pafnuty_less extends CModule {
 
 	function InstallFiles($arParams = array()) {
 		CopyDirFiles($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/" . $this->MODULE_ID . "/install/components/", $_SERVER["DOCUMENT_ROOT"] . "/bitrix/components", true, true);
+
 		return true;
 	}
 
 	function UnInstallFiles() {
 		DeleteDirFiles($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/" . $this->MODULE_ID . "/install/components/", $_SERVER["DOCUMENT_ROOT"] . "/bitrix/components");
+
 		return true;
 	}
 
@@ -96,4 +100,3 @@ class pafnuty_less extends CModule {
 		}
 	}
 }
-?>

@@ -3,16 +3,40 @@ namespace Pafnuty\Less;
 
 require __DIR__ . '/../libs/less/Less.php';
 
+/**
+ * Class lessCompiler
+ *
+ * @package Pafnuty\Less
+ */
 class lessCompiler {
-
+	/**
+	 * @var bool
+	 */
 	public $rootFolder = false;
+	/**
+	 * @var string
+	 */
 	public $lessFolder = '';
-	public $fileNames  = array();
-	public $compress   = true;
-	public $sourceMap  = false;
-	public $cssFolder  = '';
+	/**
+	 * @var array
+	 */
+	public $fileNames = array();
+	/**
+	 * @var bool
+	 */
+	public $compress = true;
+	/**
+	 * @var bool
+	 */
+	public $sourceMap = false;
+	/**
+	 * @var string
+	 */
+	public $cssFolder = '';
 
 	/**
+	 * lessCompiler constructor.
+	 *
 	 * @param $rootFolder
 	 * @param $lessFolder
 	 * @param $fileNames
@@ -30,6 +54,7 @@ class lessCompiler {
 		$lessConfig->sourceMap  = $sourceMap;
 		$this->config           = $lessConfig;
 	}
+
 	/**
 	 * @param $lessFiles
 	 *
@@ -40,11 +65,12 @@ class lessCompiler {
 		foreach ($lessFiles as $key => $lessFile) {
 			$arFiles[$this->config->rootFolder . $this->config->lessFolder . $lessFile] = $this->config->rootFolder . $this->config->cssFolder;
 		}
+
 		return $arFiles;
 	}
+
 	/**
 	 * @return array
-	 * @throws Exception
 	 */
 	public function compile() {
 		$lessFiles = $this->getFileList($this->config->fileNames);
@@ -59,14 +85,16 @@ class lessCompiler {
 			'filePath' => $filePath,
 			'error'    => $error,
 		);
+
 		return $arReturn;
 	}
+
 	/**
 	 * @return array
 	 */
 	public function setOptions() {
 		$firstFileName = str_replace('.less', '', $this->config->fileNames[0]);
-		
+
 		$arOptions                      = array();
 		$arOptions['cache_dir']         = $this->config->rootFolder . $this->config->lessFolder . '/../less_cache';
 		$arOptions['compress']          = $this->config->compress;
@@ -77,6 +105,7 @@ class lessCompiler {
 		$arOptions['sourceMapBasepath'] = $this->config->rootFolder;
 		$arOptions['output']            = $this->config->rootFolder . $this->config->cssFolder . $firstFileName . '.css';
 		$arOptions['relativeUrls']      = false;
+
 		return $arOptions;
 	}
 }

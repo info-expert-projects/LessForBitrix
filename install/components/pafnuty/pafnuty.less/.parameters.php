@@ -32,11 +32,16 @@ while ($arUserGroups = $rsGroups->Fetch()) {
 }
 
 $arComponentParameters = array(
-	'GROUPS'     => array(),
+	'GROUPS'     => array(
+		'PERMISSIONS' => array(
+			'NAME' => Loc::getMessage('PAF_LESS_ACCESS'),
+			'SORT' => 10,
+		),
+	),
 	'PARAMETERS' => array(
 
 		'ACCESS_GROUPS' => array(
-			'PARENT'   => 'BASE',
+			'PARENT'   => 'PERMISSIONS',
 			'NAME'     => Loc::getMessage('PAF_LESS_ACCESS_GROUPS'),
 			'TYPE'     => 'LIST',
 			'MULTIPLE' => 'Y',
@@ -45,7 +50,7 @@ $arComponentParameters = array(
 			'VALUES'   => $arGroups,
 		),
 
-		'PATH'          => array(
+		'PATH' => array(
 			'PARENT'   => 'BASE',
 			'NAME'     => Loc::getMessage('PAF_LESS_PATH'),
 			'TYPE'     => 'STRING',
@@ -54,7 +59,7 @@ $arComponentParameters = array(
 			'REFRESH'  => "Y",
 		),
 
-		'FILES'         => array(
+		'FILES' => array(
 			'PARENT'   => 'BASE',
 			'NAME'     => Loc::getMessage('PAF_LESS_FILES'),
 			'TYPE'     => 'LIST',
@@ -63,7 +68,7 @@ $arComponentParameters = array(
 			'VALUES'   => $files,
 		),
 
-		'PATH_CSS'      => array(
+		'PATH_CSS' => array(
 			'PARENT'   => 'BASE',
 			'NAME'     => Loc::getMessage('PAF_LESS_PATH_CSS'),
 			'TYPE'     => 'STRING',
@@ -72,15 +77,15 @@ $arComponentParameters = array(
 			'REFRESH'  => 'N',
 		),
 
-		'COMPRESS'      => array(
+		'COMPRESS'   => array(
 			'PARENT'  => 'BASE',
 			'NAME'    => Loc::getMessage('PAF_LESS_COMPRESS'),
 			'TYPE'    => 'CHECKBOX',
 			'DEFAULT' => "Y",
 		),
-		'SOURSEMAP'     => array(
+		'SOURCE_MAP' => array(
 			'PARENT'  => 'BASE',
-			'NAME'    => Loc::getMessage('PAF_LESS_SOURSEMAP'),
+			'NAME'    => Loc::getMessage('PAF_LESS_SOURCE_MAP'),
 			'TYPE'    => 'CHECKBOX',
 			'DEFAULT' => 'N',
 		),

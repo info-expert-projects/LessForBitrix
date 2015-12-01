@@ -1,4 +1,12 @@
 <?php
+/**
+ * LESS Компилятор для Bitrix
+ *
+ * @author Павел Белоусов
+ * @license MIT
+ * 
+ */
+
 use \Bitrix\Main;
 use \Bitrix\Main\Application as App;
 use \Bitrix\Main\Localization\Loc as Loc;
@@ -9,11 +17,13 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
 	die();
 }
 
+/**
+ * Class PafnutyLessComponent
+ */
 class PafnutyLessComponent extends CBitrixComponent {
 
 	/**
-	 * Check Required Modules
-	 * @throws Exception
+	 * @throws SystemException
 	 */
 	protected function checkModules() {
 		if (!Main\Loader::includeModule('pafnuty.less')) {
@@ -23,7 +33,8 @@ class PafnutyLessComponent extends CBitrixComponent {
 	}
 
 	/**
-	 * @param array $array 
+	 * @param array $array
+	 *
 	 * @return boolean
 	 */
 	protected function checkPermission($array) {
@@ -31,6 +42,7 @@ class PafnutyLessComponent extends CBitrixComponent {
 		if (CSite::InGroup($array)) {
 			return true;
 		}
+
 		return false;
 
 	}
@@ -44,30 +56,35 @@ class PafnutyLessComponent extends CBitrixComponent {
 	}
 
 	/**
-	 * Prepare Component Params
+	 * @param $params
+	 *
+	 * @return mixed
 	 */
 	public function onPrepareComponentParams($params) {
 
-		$params['COMPRESS']  = ($params['COMPRESS'] == 'Y');
-		$params['SOURSEMAP'] = ($params['SOURSEMAP'] == 'Y');
+		$params['COMPRESS']   = ($params['COMPRESS'] == 'Y');
+		$params['SOURCE_MAP'] = ($params['SOURCE_MAP'] == 'Y');
 
 		$params['ACCESS_GROUPS'] = is_array($params['ACCESS_GROUPS']) ? $params['ACCESS_GROUPS'] : array('1');
 
 		$params['FILES'] = is_array($params['FILES']) ? $params['FILES'] : array('template_styles.less');
 
 		$params['PATH_TO_FILES'] = isset($params['PATH']) && strlen(trim($params['PATH']))
-		? preg_replace(array('~^/~', '~/$~'), '/', trim($params['PATH']))
-		: SITE_TEMPLATE_PATH . '/less/';
+			? preg_replace(array('~^/~', '~/$~'), '/', trim($params['PATH']))
+			: SITE_TEMPLATE_PATH . '/less/';
 
 		$params['PATH_TO_FILES_CSS'] = isset($params['PATH_CSS']) && strlen(trim($params['PATH_CSS']))
-		? preg_replace(array('~^/~', '~/$~'), '/', trim($params['PATH_CSS']))
-		: SITE_TEMPLATE_PATH . '/';
+			? preg_replace(array('~^/~', '~/$~'), '/', trim($params['PATH_CSS']))
+			: SITE_TEMPLATE_PATH . '/';
 
 		return $params;
 	}
 
+	/**
+	 *
+	 */
 	public function executeComponent() {
-		if (checkPermission($this->arParams('ACCESS_GROUPS'))) {
+		if ($this->checkPermission($this->arParams['ACCESS_GROUPS'])) {
 			try {
 
 				$this->checkModules();
@@ -79,7 +96,7 @@ class PafnutyLessComponent extends CBitrixComponent {
 				$lessFolder = $this->arParams['PATH_TO_FILES'];
 				$fileNames  = $this->arParams['FILES'];
 				$compress   = $this->arParams['COMPRESS'];
-				$sourceMap  = $this->arParams['SOURSEMAP'];
+				$sourceMap  = $this->arParams['SOURCE_MAP'];
 				$cssFolder  = $this->arParams['PATH_TO_FILES_CSS'];
 
 				$compile = new \Pafnuty\Less\lessCompiler($rootFolder, $lessFolder, $fileNames, $cssFolder, $compress, $sourceMap);

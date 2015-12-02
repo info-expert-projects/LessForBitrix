@@ -17,7 +17,7 @@ if (isset($arCurrentValues['PATH'])
 ) {
 
 	while (false !== ($file = readdir($handle))) {
-		if ($file != '.' && $file != '..') {
+		if (strpos($file, '.less') !== false) {
 			$files[$file] = $file;
 		}
 	}

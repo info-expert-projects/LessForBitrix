@@ -6,3 +6,5 @@ $MESS['PAF_LESS_COMPRESS']      = 'Минифицировать CSS файл';
 $MESS['PAF_LESS_SOURCE_MAP']    = 'Генерировать SourceMap';
 $MESS['PAF_LESS_ACCESS']        = 'Доступ';
 $MESS['PAF_LESS_ACCESS_GROUPS'] = 'Кому разрешена компиляция';
+$MESS['PAF_LESS_FILES_SETTINGS'] = 'Настройка путей и файлов';
+$MESS['PAF_LESS_COMPILE_SETTINGS'] = 'Настройка параметров компиляции';

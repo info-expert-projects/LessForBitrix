@@ -1,12 +1,12 @@
 <?php
-namespace Pafnuty\Less;
+namespace Cn\Less;
 
 require __DIR__ . '/../libs/less/Less.php';
 
 /**
  * Class lessCompiler
  *
- * @package Pafnuty\Less
+ * @package Cn\Less
  */
 class lessCompiler {
 	/**

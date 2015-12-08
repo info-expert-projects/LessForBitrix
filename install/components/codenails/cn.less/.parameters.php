@@ -34,15 +34,15 @@ while ($arUserGroups = $rsGroups->Fetch()) {
 $arComponentParameters = array(
 	'GROUPS'     => array(
 		'PERMISSIONS' => array(
-			'NAME' => Loc::getMessage('PAF_LESS_ACCESS'),
+			'NAME' => Loc::getMessage('CN_LESS_ACCESS'),
 			'SORT' => 10,
 		),
 		'FILES_SETTINGS' => array(
-			'NAME' => Loc::getMessage('PAF_LESS_FILES_SETTINGS'),
+			'NAME' => Loc::getMessage('CN_LESS_FILES_SETTINGS'),
 			'SORT' => 20,
 		),
 		'COMPILE_SETTINGS' => array(
-			'NAME' => Loc::getMessage('PAF_LESS_COMPILE_SETTINGS'),
+			'NAME' => Loc::getMessage('CN_LESS_COMPILE_SETTINGS'),
 			'SORT' => 30,
 		),
 	),
@@ -50,7 +50,7 @@ $arComponentParameters = array(
 
 		'ACCESS_GROUPS' => array(
 			'PARENT'   => 'PERMISSIONS',
-			'NAME'     => Loc::getMessage('PAF_LESS_ACCESS_GROUPS'),
+			'NAME'     => Loc::getMessage('CN_LESS_ACCESS_GROUPS'),
 			'TYPE'     => 'LIST',
 			'MULTIPLE' => 'Y',
 			'DEFAULT'  => "1",
@@ -60,7 +60,7 @@ $arComponentParameters = array(
 
 		'PATH' => array(
 			'PARENT'   => 'FILES_SETTINGS',
-			'NAME'     => Loc::getMessage('PAF_LESS_PATH'),
+			'NAME'     => Loc::getMessage('CN_LESS_PATH'),
 			'TYPE'     => 'STRING',
 			'MULTIPLE' => "N",
 			'DEFAULT'  => '',
@@ -69,7 +69,7 @@ $arComponentParameters = array(
 
 		'FILES' => array(
 			'PARENT'   => 'FILES_SETTINGS',
-			'NAME'     => Loc::getMessage('PAF_LESS_FILES'),
+			'NAME'     => Loc::getMessage('CN_LESS_FILES'),
 			'TYPE'     => 'LIST',
 			'MULTIPLE' => "Y",
 			'DEFAULT'  => '',
@@ -78,7 +78,7 @@ $arComponentParameters = array(
 
 		'PATH_CSS' => array(
 			'PARENT'   => 'FILES_SETTINGS',
-			'NAME'     => Loc::getMessage('PAF_LESS_PATH_CSS'),
+			'NAME'     => Loc::getMessage('CN_LESS_PATH_CSS'),
 			'TYPE'     => 'STRING',
 			'MULTIPLE' => 'N',
 			'DEFAULT'  => '',
@@ -87,13 +87,13 @@ $arComponentParameters = array(
 
 		'COMPRESS'   => array(
 			'PARENT'  => 'COMPILE_SETTINGS',
-			'NAME'    => Loc::getMessage('PAF_LESS_COMPRESS'),
+			'NAME'    => Loc::getMessage('CN_LESS_COMPRESS'),
 			'TYPE'    => 'CHECKBOX',
 			'DEFAULT' => "Y",
 		),
 		'SOURCE_MAP' => array(
 			'PARENT'  => 'COMPILE_SETTINGS',
-			'NAME'    => Loc::getMessage('PAF_LESS_SOURCE_MAP'),
+			'NAME'    => Loc::getMessage('CN_LESS_SOURCE_MAP'),
 			'TYPE'    => 'CHECKBOX',
 			'DEFAULT' => 'N',
 		),

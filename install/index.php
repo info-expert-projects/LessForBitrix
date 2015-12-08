@@ -3,8 +3,8 @@ use \Bitrix\Main\Localization\Loc as Loc;
 
 Loc::loadMessages(__FILE__);
 
-class pafnuty_less extends CModule {
-	var $MODULE_ID = 'pafnuty.less';
+class cn_less extends CModule {
+	var $MODULE_ID = 'cn.less';
 	var $MODULE_VERSION;
 	var $MODULE_VERSION_DATE;
 	var $MODULE_NAME;
@@ -12,7 +12,7 @@ class pafnuty_less extends CModule {
 	var $MODULE_CSS;
 	var $strError = '';
 
-	function pafnuty_less() {
+	function cn_less() {
 		$arModuleVersion = array();
 		$path            = str_replace("\\", "/", __FILE__);
 		$path            = substr($path, 0, strlen($path) - strlen("/index.php"));
@@ -20,11 +20,11 @@ class pafnuty_less extends CModule {
 
 		$this->MODULE_VERSION      = $arModuleVersion["VERSION"];
 		$this->MODULE_VERSION_DATE = $arModuleVersion["VERSION_DATE"];
-		$this->MODULE_NAME         = Loc::getMessage("PAFNUTY_LESS_MODULE_NAME");
-		$this->MODULE_DESCRIPTION  = Loc::getMessage("PAFNUTY_LESS_MODULE_DESCRIPTION");
+		$this->MODULE_NAME         = Loc::getMessage("CN_LESS_MODULE_NAME");
+		$this->MODULE_DESCRIPTION  = Loc::getMessage("CN_LESS_MODULE_DESCRIPTION");
 
-		$this->PARTNER_NAME = GetMessage("PAFNUTY_LESS_PARTNER_NAME");
-		$this->PARTNER_URI  = GetMessage("PAFNUTY_LESS_PARTNER_URI");
+		$this->PARTNER_NAME = GetMessage("CN_LESS_PARTNER_NAME");
+		$this->PARTNER_URI  = GetMessage("CN_LESS_PARTNER_URI");
 	}
 
 	function GetModuleTasks() {

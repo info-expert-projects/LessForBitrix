@@ -7,16 +7,16 @@ use Bitrix\Main\Localization\Loc;
 Loc::loadMessages(__FILE__);
 
 $arComponentDescription = array(
-	'NAME'         => Loc::getMessage('PAF_LESS_DESC_NAME'),
-	'DESCRIPTION'  => Loc::getMessage('PAF_LESS_DESC_DESCRIPTION'),
+	'NAME'         => Loc::getMessage('CN_LESS_DESC_NAME'),
+	'DESCRIPTION'  => Loc::getMessage('CN_LESS_DESC_DESCRIPTION'),
 	'PATH'         => array(
-		'ID' => "utility"
+		'ID' => "utility",
 	),
 	'AREA_BUTTONS' => array(
 		array(
-			'TITLE' => Loc::getMessage('PAF_LESS_DESC_AREA_BUTTONS_TITLE')
+			'TITLE' => Loc::getMessage('CN_LESS_DESC_AREA_BUTTONS_TITLE'),
 		),
 	),
 	'CACHE_PATH'   => 'Y',
-	'COMPLEX'      => 'N'
+	'COMPLEX'      => 'N',
 );

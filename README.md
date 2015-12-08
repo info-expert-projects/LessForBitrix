@@ -1,5 +1,5 @@
 # LESS Компилятор для Bitrix
-![version](https://img.shields.io/badge/version-1.2.1-brightgreen.svg?style=flat-square "Version")
+![version](https://img.shields.io/badge/version-2.0.0-brightgreen.svg?style=flat-square "Version")
 ![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)
 
 Простой и удобный компонент, реализующий компиляцию LESS файлов.
@@ -21,7 +21,7 @@
 В нужном месте шаблона прописать вызов компонента:
 ```php
 <?$APPLICATION->IncludeComponent(
-    "cn:cn.less", 
+    "codenails:cn.less", 
     "", 
     array(),
     false
@@ -37,8 +37,12 @@
 <?\Bitrix\Main\Page\Asset::getInstance()->addCss('/local/assets/css/compiled_file.css');?>
 ```
 
+## Известные ошибки и недоработки
+- При изменении параметров компонента нужно либо удалять папку `less_cache` и скомпилированные файлы (`.css` и `.map`), либо пересохранить один из less файлов, чтобы произошла перекомпляция.
+- Для корректной работы SourseMap необходимо отключать минификацию CSS файла.
+
 ## Вопросы и поддержка
 Если у вас возник вопрос, или есть пожелания к улучшению компонента — [воспользуйтесь формой](https://github.com/pafnuty/LessForBitrix/issues)
 
-## Куда делась старая примочка?
+## Куда делась старая "примочка"?
 - Живёт в ветке [old](https://github.com/pafnuty/LessForBitrix/tree/old) и её развитие не планируется.

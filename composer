@@ -1,0 +1,30 @@
+{
+  "name": "pafnuty/LessForBitrix",
+  "description": "LESS Компилятор для Bitrix",
+  "keywords": [
+    "bitrix",
+    "Битрикс",
+    "компонент",
+    "less",
+    "compiler"
+  ],
+  "type": "bitrix-module",
+  "license": "MIT",
+  "support": {
+    "issues": "https://github.com/pafnuty/LessForBitrix/issues",
+    "skype": "paffffff",
+    "source": "https://github.com/pafnuty/LessForBitrix"
+  },
+  "authors": [
+    {
+      "name": "Павел Белоусов",
+      "email": "pafnuty10@gmail.com"
+    }
+  ],
+  "extra": {
+    "installer-name": "cn.less"
+  },
+  "require": {
+    "composer/installers": ">=1.0.22 <2.0"
+  }
+}

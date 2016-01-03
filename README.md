@@ -1,5 +1,5 @@
 # LESS Компилятор для Bitrix
-![version](https://img.shields.io/badge/version-2.0.0-brightgreen.svg?style=flat-square "Version")
+![version](https://img.shields.io/badge/version-2.1.0-brightgreen.svg?style=flat-square "Version")
 ![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)
 
 Простой и удобный компонент, реализующий компиляцию LESS файлов.
@@ -14,8 +14,18 @@
 - Управление доступом к компиляции.
 
 ## Установка
-- Разместить файлы и папаки из репозитория в папку `/bitrix/modules/cn.less`. Компонент появится в списке установленных решений.
-- Выполнить установку.
+
+### Шаг 1
+#### a)
+Компонент очень удобно устанавливать через composer:
+```bash
+composer require pafnuty/less-for-bitrix
+```
+#### b)
+Но можно и вручную, для этого нужно положить файлы и папаки из репозитория в папку `/bitrix/modules/cn.less`. 
+
+### Шаг 2
+В админке перейти в раздел `/bitrix/admin/partner_modules.php` и выполнить установку решения **LESS Компилятор (cn.less)**.
 
 ## Использование
 В нужном месте шаблона прописать вызов компонента:
@@ -27,6 +37,10 @@
     false
 );?>
 ```
+
+Так же можно выбрать нужный компонент при редактировании страницы:
+
+![cn.less](https://dl.dropboxusercontent.com/u/8142395/bitrix/cn.less.png "LESS Компилятор (cn.less)")
 
 При необходимости можно настроить параметры.
 

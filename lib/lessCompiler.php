@@ -104,6 +104,7 @@ class lessCompiler {
 		$arOptions['sourceRoot']        = '/';
 		$arOptions['sourceMapBasepath'] = $this->config->rootFolder;
 		$arOptions['output']            = $this->config->rootFolder . $this->config->cssFolder . $firstFileName . '.css';
+		$arOptions['indentation']       = "\t";
 		$arOptions['relativeUrls']      = false;
 
 		return $arOptions;
